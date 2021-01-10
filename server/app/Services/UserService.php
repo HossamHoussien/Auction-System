@@ -4,89 +4,70 @@ namespace App\Services;
 
 use DB;
 use App\Models\Bid;
-use App\Models\User;
 use App\Models\Item;
+use App\Models\User;
+use App\Exceptions\AutoBiddingViolation;
 use App\Exceptions\DuplicateBidException;
 use App\Exceptions\InvalidBidAmountException;
+use App\Exceptions\InvalidSubmissionDateExeption;
+use App\Repositories\BidRepository;
 
 class UserService
 {
     protected $bidService;
+    protected $itemService;
 
     public function __construct() {
         $this->bidService = new BidService;
+        $this->itemService = new ItemService;
     }
 
-    public function canBid(Item $item)
+    public function canBid(User $user, Item $item)
     {
-        // 1. If Highest bid doesn't belong to the current user
-        //? 2. Auto-biding?
 
         $highestBid = $this->bidService->highestBid($item);
 
-        $currentUserId = auth()->id();
-
-        return $highestBid ? $highestBid->user_id !== $currentUserId : true;
-        
+        return $highestBid ? $highestBid->user_id !== $user : true;
         
     }
-    
 
-    public function submitBid(Item $item, array $bidInfo)
+
+    public function submitBid(Item $item, $user_id, array $bidInfo, $autobiding = false)
     {
-        $user = auth()->user();
+        $data = $this->bidService->transformBidData($user_id, $bidInfo);
+        
+        DB::transaction(function () use($user_id, $item, $data, $autobiding){
 
-        $data = $this->transformBidData($user, $bidInfo);
-
-        DB::transaction(function () use($user, $item, $data){
+            $user = User::whereId($user_id)->lockForUpdate()->first();
             
-            // Get Bid on $item made by $user, if exists
             $bid = $user->bids()->whereItemId($data['item_id'])->lockForUpdate()->first();
-
-            // Get the Highest bid on this item
-            $highestBid = Bid::where('item_id', $item->id)->orderBy('amount', 'DESC')->lockForUpdate()->first();
-
-
-            $this->validateSubmittedBid($user, $highestBid, $data);
             
-            // 3. bid_amount > highest bid && highest bidder != current user
-            //   3.1 If user has NOT submit a bid on this item before
-            if(is_null($bid) ){
-                Bid::create($data);
-            }
-            //   3.2 User has a previous bid on this item
-            else{
-                $bid->update($data);
-            }
+            $highestBid = $this->bidService->getHighestBid($item);
+
+            $isAutoBiding = $autobiding && !is_null($highestBid);
+
+            $data['amount'] =  $isAutoBiding ? $highestBid->amount + 1 : $data['amount'];
+
+            $increment =  $isAutoBiding ? ($highestBid->amount + 1) -  $bid->amount : 0;
+
+            $this->itemService->validateItemCloseDate($item);
+
+            $this->bidService->validateAutoBiding($user, $increment, $autobiding);
+
+            $this->bidService->validateSubmittedBid($user, $highestBid, $data);
+
+            $this->bidService->updateOrCreate($data, $bid);
+            
+            $this->incrementTotalAutoBids($user, $increment);
 
         }, 3);
-    }
-
-    protected function validateSubmittedBid(User $user, $highestBid, array $data)
-    {
-        // No bids on this item submitted yet
-        if(is_null($highestBid)) return true;
-
-        // 1. Check if bid_amount <= highest bid ?=> throw error
-        if($data['amount'] <= $highestBid->amount){
-            throw new InvalidBidAmountException;
-        }
-        
-        if($highestBid->user_id === $user->id){
-            // 2. If highest bidder === current user ?=> throw error
-            throw new DuplicateBidException;
-        }
 
         return true;
     }
-
-
-    protected function transformBidData(User $user, array $bidInfo){
-        return [
-            'amount'                => $bidInfo['bid_amount'],
-            'user_id'               => $user->id,
-            'item_id'               => $bidInfo['item_id'],
-            'auto_biding_allowed'   => $bidInfo['auto_biding'],
-        ];
+    
+    public function incrementTotalAutoBids(User $user, int $increment)
+    {
+        return $user->increment('total_auto_bids', $increment);;
     }
+
 }

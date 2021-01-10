@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Models\Item;
-use App\Models\Bid;
+use App\Models\User;
 use App\Services\UserService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\BidSubmitRequest;
 
 class BidController extends Controller
 {
@@ -16,21 +16,19 @@ class BidController extends Controller
         $this->userService = new UserService;
     }
 
-    public function bid(Request $request)
+    public function bid(BidSubmitRequest $request)
     {
-        $data = $request->validate([
-            'item_id' => 'required|numeric',
-            'bid_amount' => 'required|numeric',
-            'auto_biding' => 'required|boolean',
-        ]);
+        $data = $request->validated();
 
-        $user = auth()->user();
+        $user_id = auth()->id();        
 
         $item = Item::findOrFail($data['item_id']);
 
-        $bid = $this->userService->submitBid($item, $data);
+        $status = $this->userService->submitBid($item, $user_id, $data);
 
-        return response()->json($bid);
+        return response()->json([
+            'status' => $status,
+        ]);
 
     }
 
