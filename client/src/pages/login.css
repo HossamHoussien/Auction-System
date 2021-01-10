@@ -1,0 +1,89 @@
+.login-form-wrapper {
+    width: 80vw;
+    min-height: 80vh;
+    background: #ffffff;
+    border: 1px solid #eee;
+    margin: 10vh auto;
+    display: flex;
+    align-items: stretch;
+    box-shadow: 1px 1px 3px #eee, -1px -1px 3px #eee;
+}
+
+.login-form-wrapper .logo-wrapper {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #316ade;
+}
+
+.login-form-wrapper .logo-wrapper img {
+    width: 70%;
+    height: 210px;
+    object-fit: contain;
+}
+
+.login-form-wrapper .card-body {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.login-form-wrapper .card-body .card-header {
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+    padding: 1rem;
+}
+
+.login-form-wrapper .card-body .form {
+    width: 70%;
+    margin: 2rem;
+}
+
+.login-form-wrapper .card-body .form .form-group {
+    text-align: center;
+}
+
+.login-form-wrapper .card-body .form .form-group .form-control {
+    padding: 1rem;
+    background: #eee;
+    border: none;
+    font-weight: bold;
+    width: 100%;
+    font-size: 14px;
+    margin: 0 auto 1rem;
+    outline: none;
+}
+
+.login-form-wrapper .card-body .form .form-group button {
+    padding: 1rem;
+    width: 100%;
+    margin: 1rem 0;
+    border: none;
+    background: #316ade;
+    color: white;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.login-form-wrapper .card-body .form .form-group button:hover {
+    box-shadow: 0px 0px 10px 0px #ccc, 0px 0px 10px 0px #ccc;
+}
+
+.login-form-wrapper .card-body .form .form-group button.loading {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.login-form-wrapper .card-body .form .form-group .invalid-feedback {
+    font-size: 13px;
+    padding: 0.5rem 0;
+    color: #da3b40;
+    text-align: left;
+    display: block;
+}

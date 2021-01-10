@@ -14,6 +14,25 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::get('/items', 'ItemController@index');
+
+Route::get('/items/{item}', 'ItemController@show');
+
+Route::post('/biding', 'BidController@bid');
+
+
+
+use App\Models\Item;
+use App\Services\UserService;
+
+Route::get('/test', function(){
+    
+    $item = Item::findOrFail(1);
+
+    $userService = new UserService;
+
+    $response = $userService->canBid($item);
+
+    return response()->json($response);
+
 });

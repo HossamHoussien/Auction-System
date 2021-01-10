@@ -1,25 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { BrowserRouter as Router, Switch } from "react-router-dom";
+
+// Pages
+import LoginPage from "./pages/Login";
+import HomePage from "./pages/Home";
+import ItemPage from "./pages/Item";
+
+// Components
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
+import Navbar from "./components/Navbar";
+import AuthProvider from "./components/AuthProvider";
+
+export default function App() {
+	return (
+		<AuthProvider>
+			<Router>
+				<Navbar />
+				<Switch>
+					<PublicRoute exact path="/login">
+						<LoginPage />
+					</PublicRoute>
+
+					<ProtectedRoute path="/items/:id">
+						<ItemPage />
+					</ProtectedRoute>
+
+					<ProtectedRoute exact path="/">
+						<HomePage />
+					</ProtectedRoute>
+				</Switch>
+			</Router>
+		</AuthProvider>
+	);
 }
-
-export default App;
