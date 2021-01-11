@@ -4,7 +4,7 @@ export default class Auth {
 	static signin = (email, password) => {
 		return new Promise((resolve, reject) => {
 			axios
-				.post("http://scopic.test/auth/api/login", { email, password })
+				.post(`${process.env.REACT_APP_API_ROUTE}/auth/api/login`, { email, password })
 				.then((response) => {
 					localStorage.setItem("access_token", response.data.access_token);
 					resolve(response.data);
@@ -23,7 +23,7 @@ export default class Auth {
 	static signout = () => {
 		return new Promise((resolve, reject) => {
 			axios
-				.post("http://scopic.test/auth/api/logout")
+				.post(`${process.env.REACT_APP_API_ROUTE}/auth/api/logout`)
 				.then((response) => {
 					localStorage.removeItem("access_token");
 					resolve(response);

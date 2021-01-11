@@ -5,7 +5,7 @@ export default class Repository {
 		return new Promise((resolve, reject) => {
 			let page = current_page === 1 ? "" : `?page=${current_page}`;
 
-			axios.get(`http://scopic.test/api/items${page}`).then((res) => {
+			axios.get(`${process.env.REACT_APP_API_ROUTE}/api/items${page}`).then((res) => {
 				resolve(res.data);
 			});
 		});
@@ -13,7 +13,7 @@ export default class Repository {
 
 	static getItemDetails(item_id) {
 		return new Promise((resolve, reject) => {
-			axios.get(`http://scopic.test/api/items/${item_id}`).then((res) => {
+			axios.get(`${process.env.REACT_APP_API_ROUTE}/api/items/${item_id}`).then((res) => {
 				resolve(res.data);
 			});
 		});
@@ -23,7 +23,7 @@ export default class Repository {
 		return new Promise((resolve, reject) => {
 			axios({
 				method: "POST",
-				url: `http://scopic.test/api/biding`,
+				url: `${process.env.REACT_APP_API_ROUTE}/api/biding`,
 				data: { item_id, bid_amount, auto_biding },
 			}).then((res) => {
 				resolve(res.data);
@@ -34,7 +34,7 @@ export default class Repository {
 		return new Promise((resolve, reject) => {
 			axios({
 				method: "POST",
-				url: `http://scopic.test/api/search`,
+				url: `${process.env.REACT_APP_API_ROUTE}/api/search`,
 				data: { keyword },
 			}).then((res) => {
 				resolve(res.data);
@@ -45,7 +45,7 @@ export default class Repository {
 		return new Promise((resolve, reject) => {
 			axios({
 				method: "POST",
-				url: `http://scopic.test/api/autobiding/settings`,
+				url: `${process.env.REACT_APP_API_ROUTE}/api/autobiding/settings`,
 				data: { auto_biding_amount },
 			}).then((res) => {
 				resolve(res.data);

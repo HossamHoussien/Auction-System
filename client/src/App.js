@@ -12,6 +12,8 @@ import PublicRoute from "./components/PublicRoute";
 import Navbar from "./components/Navbar";
 import AuthProvider from "./providers/AuthProvider";
 
+require("dotenv").config();
+
 export default function App() {
 	return (
 		<AuthProvider>
