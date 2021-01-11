@@ -97,3 +97,22 @@
 		}
 	}
 }
+
+@media screen and (max-width: 768px) {
+	.img {
+		height: 300px;
+		width: 100%;
+		justify-content: center;
+		> div {
+		}
+	}
+
+	.item-details {
+		width: 100%;
+	}
+
+	.item-card,
+	.biding-panel {
+		width: 100%;
+	}
+}

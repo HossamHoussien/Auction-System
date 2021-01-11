@@ -25,7 +25,7 @@ export function useProvideAuth() {
 
 	useEffect(() => {
 		setAccessToken(token);
-	}, []);
+	}, [token]);
 
 	return {
 		isAuthenticated,

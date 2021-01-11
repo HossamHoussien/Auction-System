@@ -25,12 +25,27 @@ $sidebarWidth: 300px;
 		}
 		.pagination-wrapper {
 			text-align: center;
-			width: 900px;
-			text-align: center;
 			.MuiPagination-ul {
 				justify-content: center;
 				margin-top: 3rem;
 			}
 		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.sidebar-wrapper {
+		width: 100%;
+		margin-bottom: 2rem;
+	}
+
+	.items-wrapper {
+		width: 100%;
+	}
+}
+
+@media screen and (max-width: 425px) {
+	.home-page {
+		padding: 0.5rem;
 	}
 }
