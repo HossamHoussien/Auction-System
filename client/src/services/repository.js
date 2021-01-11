@@ -41,4 +41,15 @@ export default class Repository {
 			});
 		});
 	}
+	static storeAutoBidingConfig(auto_biding_amount) {
+		return new Promise((resolve, reject) => {
+			axios({
+				method: "POST",
+				url: `http://scopic.test/api/autobiding/settings`,
+				data: { auto_biding_amount },
+			}).then((res) => {
+				resolve(res.data);
+			});
+		});
+	}
 }

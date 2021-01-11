@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/index";
 import Auth from "../services/auth";
@@ -21,9 +21,10 @@ export default function LoginPage() {
 	const login = () => {
 		setIsLoading(true);
 		Auth.signin(email, password)
-			.then((access_token) => {
+			.then((response) => {
 				setIsLoading(false);
-				auth.setAccessToken(access_token);
+				auth.setAccessToken(response.access_token);
+				auth.setMaxAutoBid(response.user.max_bid_amount);
 				history.replace(from);
 			})
 			.catch((e) => {

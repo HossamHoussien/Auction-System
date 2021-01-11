@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "./timer.scss";
 
-export default function Timer(props) {
+export default function Timer({ date }) {
 	const [days, setDays] = useState(0);
 	const [hours, setHours] = useState(0);
 	const [minutes, setMinutes] = useState(0);
 	const [seconds, setSeconds] = useState(0);
 
 	useEffect(() => {
-		getTimeDifference(props.date);
-		let intervalHandler = setInterval(() => getTimeDifference(props.date), 1000);
+		getTimeDifference(date);
+
+		let intervalHandler = setInterval(() => getTimeDifference(date), 1000);
 
 		return () => clearInterval(intervalHandler);
-	}, []);
+	}, [date]);
 
 	function leadingZero(num) {
 		return num < 10 && num >= 0 ? "0" + num : num;

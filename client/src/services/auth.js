@@ -7,10 +7,9 @@ export default class Auth {
 				.post("http://scopic.test/auth/api/login", { email, password })
 				.then((response) => {
 					localStorage.setItem("access_token", response.data.access_token);
-					resolve(response.data.access_token);
+					resolve(response.data);
 				})
 				.catch((error) => {
-					// setAccessToken(null);
 					localStorage.removeItem("access_token");
 					reject(error);
 				});

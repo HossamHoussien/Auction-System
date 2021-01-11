@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import HistoryCard from "./HistoryCard";
 import EmptyIcon from "./EmptyIcon";
+
 export default function BidingPanel({ bids }) {
 	if (bids.length === 0) {
 		return (
@@ -11,6 +12,7 @@ export default function BidingPanel({ bids }) {
 	}
 	return (
 		<div className="biding-panel">
+			<div className="history">Biding History</div>
 			<ul>
 				{bids.map((bid) => (
 					<HistoryCard bid={bid} key={bid.id} />

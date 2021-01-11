@@ -1,29 +1,36 @@
-// .MuiDataGrid-root .MuiDataGrid-colCell,
-// .MuiDataGrid-root .MuiDataGrid-cell {
-// 	&:focus {
-// 		outline: none !important;
-// 	}
-// 	.item-image {
-// 		width: 80px;
-// 		height: 80px;
-// 		object-fit: cover;
-// 		border-radius: 50%;
-// 		margin: 0 auto;
-// 	}
-// }
-
-.items-wrapper {
+$sidebarWidth: 300px;
+.home-page {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: center;
-	padding: 2rem 1rem;
-	.serach-wrapper {
-		width: 90%;
+	padding: 3rem;
+	.sidebar-wrapper {
+		width: $sidebarWidth;
+		background: white;
+		height: 120px;
 	}
-	.MuiPaper-root {
-		margin: 0.5rem;
+	.items-wrapper {
+		width: calc(100% - #{$sidebarWidth});
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		.items-list {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			padding: 0 1rem;
+			margin-top: -0.5rem;
+		}
+		.MuiPaper-root {
+			margin: 0.5rem;
+		}
+		.pagination-wrapper {
+			text-align: center;
+			width: 900px;
+			text-align: center;
+			.MuiPagination-ul {
+				justify-content: center;
+				margin-top: 3rem;
+			}
+		}
 	}
-}
-.pagination-wrapper {
-	text-align: center;
 }

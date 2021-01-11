@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-
+import React from "react";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 
 // Pages
@@ -11,8 +10,7 @@ import ItemPage from "./pages/Item";
 import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import Navbar from "./components/Navbar";
-import AuthProvider from "./components/AuthProvider";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import AuthProvider from "./providers/AuthProvider";
 
 export default function App() {
 	return (
@@ -28,7 +26,7 @@ export default function App() {
 						<ItemPage />
 					</ProtectedRoute>
 
-					<ProtectedRoute exact path="/">
+					<ProtectedRoute path="/">
 						<HomePage />
 					</ProtectedRoute>
 				</Switch>

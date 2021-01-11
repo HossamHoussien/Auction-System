@@ -15,8 +15,12 @@ export const useAuth = () => {
 export function useProvideAuth() {
 	const [access_token, setAccessToken] = useState(null);
 
+	const [maxAutoBid, setMaxAutoBid] = useState(null);
+
 	const token = localStorage.getItem("access_token");
+
 	const isAuthenticated = token ? true : false;
+
 	configureAxios(token);
 
 	useEffect(() => {
@@ -26,6 +30,8 @@ export function useProvideAuth() {
 	return {
 		isAuthenticated,
 		access_token,
+		maxAutoBid,
+		setMaxAutoBid,
 		setAccessToken,
 	};
 }

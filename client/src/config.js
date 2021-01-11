@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export const configureAxios = (access_token) => {
-	console.log("configuring axios...");
 	axios.interceptors.request.use(function (config) {
 		config.headers["X-Requested-With"] = "XMLHttpRequest";
 
@@ -15,7 +14,6 @@ export const configureAxios = (access_token) => {
 	axios.interceptors.response.use(
 		(response) => response,
 		function (error) {
-			console.log(error.response);
 			if (error && error.response && error.response.status && error.response.status === 401) {
 				localStorage.removeItem("access_token");
 				window.location.replace("/login");

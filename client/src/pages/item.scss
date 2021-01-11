@@ -4,6 +4,7 @@
 	padding: 1rem 2rem;
 	justify-content: space-between;
 	align-items: flex-start;
+	margin-top: 1rem;
 
 	.item-card,
 	.biding-panel {
@@ -20,11 +21,11 @@
 			display: flex;
 			width: 300px;
 			> div {
-				background-size: cover;
+				background-size: contain;
 				width: 100%;
 				height: 100%;
 				background-repeat: no-repeat;
-				max-height: 400px;
+				max-height: 300px;
 			}
 		}
 		.item-details {
@@ -70,6 +71,14 @@
 			font-weight: bold;
 			font-size: 1rem;
 			padding: 4rem 1rem;
+		}
+
+		.history {
+			font-weight: bold;
+			color: #555;
+			background: #eee;
+			padding: 1rem;
+			border: 1px solid #eee;
 		}
 
 		.history-card {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, FormControl, FormControlLabel, InputAdornment, InputLabel, OutlinedInput, Checkbox } from "@material-ui/core";
+import { Button, FormControl, FormControlLabel, InputAdornment, InputLabel, OutlinedInput, Checkbox, Snackbar } from "@material-ui/core";
+import MuiAlert from "@material-ui/lab/Alert";
 import BidingPanel from "./../components/BidingPanel";
 import Repository from "./../services/repository";
 import Timer from "./../components/Timer";
@@ -11,7 +12,7 @@ export default function ItemPage() {
 	let [item, setItem] = useState(null);
 	let [bidValue, setBidValue] = useState(0);
 	let [autoBid, setAutoBid] = useState(false);
-	let [isDisabled, setIsDisabled] = useState(false);
+	let [message, setMessage] = useState("");
 
 	useEffect(() => {
 		Repository.getItemDetails(id).then((item) => {
@@ -34,7 +35,6 @@ export default function ItemPage() {
 
 	const handleAutoBidChange = (event) => {
 		const isChecked = event.target.checked;
-		console.log(isChecked);
 		setAutoBid(isChecked);
 	};
 
@@ -47,21 +47,35 @@ export default function ItemPage() {
 	};
 
 	const submitBiding = () => {
+		setItem({ ...item, can_bid: false });
+
 		const isValidBid = validateBid(bidValue);
 
-		if (!isValidBid) {
-			return false;
-		}
+		if (!isValidBid) return false;
 
-		Repository.bid(item.id, bidValue, autoBid).then((response) => setItem(response.item));
+		Repository.bid(item.id, bidValue, autoBid).then((response) => {
+			const message = response.message || "You bid has been submitted";
+
+			if (response.status) {
+				const item = response.item;
+				setItem(item);
+				setBidValue(item.min_bid);
+			}
+			setMessage(message);
+		});
 	};
 
 	return (
 		item && (
 			<div className="wrapper">
+				<Snackbar anchorOrigin={{ vertical: "top", horizontal: "center" }} autoHideDuration={6000} key={new Date().getMilliseconds()}>
+					<MuiAlert elevation={6} variant="filled" severity="success">
+						{message}
+					</MuiAlert>
+				</Snackbar>
 				<div className="item-card">
 					<div className="img">
-						<div style={{ background: `url(${item.image_url})` }} alt={`${item.name} Picture`}></div>
+						<div style={{ backgroundImage: `url(${item.image_url})` }} alt={`${item.name} Picture`}></div>
 					</div>
 					<div className="item-details">
 						<div className="details">
@@ -80,7 +94,7 @@ export default function ItemPage() {
 								<FormControl className="submit-actions">
 									<FormControlLabel control={<Checkbox checked={autoBid} color="primary" onChange={handleAutoBidChange} name="auto_bid" />} label="Enable Auto-biding?" />
 
-									<Button variant="contained" color="primary" size="small" disabled={!item.can_bid || !validateBid(bidValue)} onClick={submitBiding}>
+									<Button variant="contained" style={{ marginTop: "2rem" }} color="primary" size="small" disabled={!item.can_bid || !validateBid(bidValue)} onClick={submitBiding}>
 										Submit Bid
 									</Button>
 								</FormControl>
