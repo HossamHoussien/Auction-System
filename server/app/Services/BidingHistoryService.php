@@ -12,14 +12,11 @@ use App\Exceptions\InvalidBidAmountException;
 
 class BidingHistoryService
 {
-    protected $repository;
-
-
 
     public function recordHistory(array $data, bool $autobidding = false)
     {
         $data = $this->formatData($data, $autobidding);
-        
+
         BidingHistory::create($data);
     }
 

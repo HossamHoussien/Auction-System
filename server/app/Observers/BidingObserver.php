@@ -3,8 +3,6 @@
 namespace App\Observers;
 
 use App\Models\Bid;
-use App\Services\BidService;
-use App\Services\UserService;
 use App\Jobs\ProcessAutoBiding;
 
 class BidingObserver
@@ -17,13 +15,10 @@ class BidingObserver
      */
     public function saved(Bid $bid)
     {
-        $userService = new UserService;
-
-        $bidService = new BidService;
         
-        $autoBidders = $bidService->getAutobidders($bid->item_id);
-
         $item = $bid->item;
+        
+        $autoBidders = $item->getAutobidders();
         
         $bidInfo = [
             "item_id" =>  $item->id,

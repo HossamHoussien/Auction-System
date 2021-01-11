@@ -7,7 +7,7 @@ class BidRepository{
 
     public function updateOrCreate(array $data, Bid $bid = null)
     {
-        return is_null($bid) ? $this->create($data) : $this->update($data, $bid); 
+        return is_null($bid) ? $this->create($data) : $this->update($data, $bid);
     }
 
     public function create(array $data)
@@ -25,4 +25,4 @@ class BidRepository{
     {
         return $bid->update($data);
     }
-} 
+}

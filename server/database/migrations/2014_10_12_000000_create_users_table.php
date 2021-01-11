@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->unsignedInteger('max_bid_amount')->nullable(); // NULL === No max
+            $table->unsignedInteger('max_bid_amount')->nullable(); 
             $table->unsignedInteger('total_auto_bids')->default(0); 
             $table->string('password');
             $table->rememberToken();

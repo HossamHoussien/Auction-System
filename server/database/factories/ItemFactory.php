@@ -25,7 +25,7 @@ class ItemFactory extends Factory
             'name' => $this->faker->name,
             'description' => $this->faker->text,
             'image_url' => 'https://source.unsplash.com/random',
-            'starting_price' => $this->faker->numberBetween(0, 100),
+            'starting_price' => $this->faker->numberBetween(10, 100),
             'close_at' => now()->addDays(7),
         ];
     }

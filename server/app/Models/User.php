@@ -47,4 +47,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bid::class);
     }
+
+    public function canBid(Item $item)
+    {
+        $highestBid = $item->getHighestBid();
+
+        return $highestBid ? $highestBid->user_id !== $this->id : true;
+        
+    }
+
+    public function incrementTotalAutoBids(int $increment)
+    {
+        return $this->increment('total_auto_bids', $increment);;
+    }
 }

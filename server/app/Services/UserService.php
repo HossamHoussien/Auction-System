@@ -1,47 +1,34 @@
 <?php
 namespace App\Services;
 
-
-use DB;
-use App\Models\Bid;
 use App\Models\Item;
 use App\Models\User;
 use App\Services\BidingHistoryService;
-
+use DB;
 
 class UserService
 {
     protected $bidService;
-    protected $itemService;
     protected $bidingHistoryService;
 
     public function __construct() {
         $this->bidService = new BidService;
-        $this->itemService = new ItemService;
-        $this->bidingHistoryService = new BidingHistoryService;
+
+        $this->bidingHistoryService = new BidingHistoryService;;
     }
 
-    public function canBid(User $user, Item $item)
-    {
-
-        $highestBid = $this->bidService->getHighestBid($item);
-
-        return $highestBid ? $highestBid->user_id !== $user->id : true;
-        
-    }
-
-
+    
     public function submitBid(Item $item, $user_id, array $bidInfo, $autobiding = false)
     {
-        $data = $this->bidService->transformBidData($user_id, $bidInfo);
-        
+        $data = $this->transformBidData($user_id, $bidInfo);
+
         DB::transaction(function () use($user_id, $item, $data, $autobiding){
 
             $user = User::whereId($user_id)->lockForUpdate()->firstOrFail();
-            
+
             $bid = $user->bids()->whereItemId($data['item_id'])->lockForUpdate()->first();
-            
-            $highestBid = $this->bidService->getHighestBid($item);
+
+            $highestBid = $item->getHighestBid();
 
             $isAutoBiding = $autobiding && !is_null($highestBid);
 
@@ -49,15 +36,15 @@ class UserService
 
             $increment =  $isAutoBiding ? ($highestBid->amount + 1) -  $bid->amount : 0;
 
-            $this->itemService->validateItemCloseDate($item);
+            $item->validateItemCloseDate();
 
             $this->bidService->validateAutoBiding($user, $increment, $autobiding);
 
             $this->bidService->validateSubmittedBid($user, $highestBid, $data);
 
             $this->bidService->updateOrCreate($data, $bid);
-            
-            $this->incrementTotalAutoBids($user, $increment);
+
+            $user->incrementTotalAutoBids($increment);
 
             $this->bidingHistoryService->recordHistory($data, $autobiding);
 
@@ -67,9 +54,13 @@ class UserService
         return true;
     }
     
-    public function incrementTotalAutoBids(User $user, int $increment)
-    {
-        return $user->increment('total_auto_bids', $increment);;
+    public function transformBidData($user_id, array $bidInfo){
+        return [
+            'amount'                => $bidInfo['bid_amount'],
+            'user_id'               => $user_id,
+            'item_id'               => $bidInfo['item_id'],
+            'auto_biding_allowed'   => $bidInfo['auto_biding'],
+        ];
     }
 
 }

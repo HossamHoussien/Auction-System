@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,5 +18,7 @@ Route::get('/items', 'ItemController@index');
 Route::get('/items/{item}', 'ItemController@show');
 
 Route::post('/biding', 'BidController@bid');
+
+Route::post('/autobiding/settings', 'BidController@autobiding');
 
 Route::post('/search', 'SearchController');
