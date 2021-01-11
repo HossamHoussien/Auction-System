@@ -6,28 +6,27 @@ use DB;
 use App\Models\Bid;
 use App\Models\Item;
 use App\Models\User;
-use App\Exceptions\AutoBiddingViolation;
-use App\Exceptions\DuplicateBidException;
-use App\Exceptions\InvalidBidAmountException;
-use App\Exceptions\InvalidSubmissionDateExeption;
-use App\Repositories\BidRepository;
+use App\Services\BidingHistoryService;
+
 
 class UserService
 {
     protected $bidService;
     protected $itemService;
+    protected $bidingHistoryService;
 
     public function __construct() {
         $this->bidService = new BidService;
         $this->itemService = new ItemService;
+        $this->bidingHistoryService = new BidingHistoryService;
     }
 
     public function canBid(User $user, Item $item)
     {
 
-        $highestBid = $this->bidService->highestBid($item);
+        $highestBid = $this->bidService->getHighestBid($item);
 
-        return $highestBid ? $highestBid->user_id !== $user : true;
+        return $highestBid ? $highestBid->user_id !== $user->id : true;
         
     }
 
@@ -38,7 +37,7 @@ class UserService
         
         DB::transaction(function () use($user_id, $item, $data, $autobiding){
 
-            $user = User::whereId($user_id)->lockForUpdate()->first();
+            $user = User::whereId($user_id)->lockForUpdate()->firstOrFail();
             
             $bid = $user->bids()->whereItemId($data['item_id'])->lockForUpdate()->first();
             
@@ -59,6 +58,9 @@ class UserService
             $this->bidService->updateOrCreate($data, $bid);
             
             $this->incrementTotalAutoBids($user, $increment);
+
+            $this->bidingHistoryService->recordHistory($data, $autobiding);
+
 
         }, 3);
 

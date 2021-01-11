@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 
@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import PublicRoute from "./components/PublicRoute";
 import Navbar from "./components/Navbar";
 import AuthProvider from "./components/AuthProvider";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 export default function App() {
 	return (
@@ -19,7 +20,7 @@ export default function App() {
 			<Router>
 				<Navbar />
 				<Switch>
-					<PublicRoute exact path="/login">
+					<PublicRoute path="/login">
 						<LoginPage />
 					</PublicRoute>
 

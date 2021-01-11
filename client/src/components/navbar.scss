@@ -2,7 +2,7 @@
 	list-style: none;
 	display: flex;
 	justify-content: space-between;
-	background: #f5f5f5;
+	background: #fff;
 	font-weight: bold;
 	box-shadow: 1px 1px 3px #ddd;
 
@@ -10,8 +10,9 @@
 		margin: 0 0.5rem;
 		padding: 0;
 		display: flex;
-		align-items: stretch;
-		a {
+		align-items: center;
+		a,
+		span {
 			color: #666;
 			text-decoration: none;
 			padding: 1rem;

@@ -19,3 +19,5 @@ Route::get('/items', 'ItemController@index');
 Route::get('/items/{item}', 'ItemController@show');
 
 Route::post('/biding', 'BidController@bid');
+
+Route::post('/search', 'SearchController');

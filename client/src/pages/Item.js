@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Button, FormControl, FormControlLabel, InputAdornment, InputLabel, OutlinedInput, Checkbox } from "@material-ui/core";
 import BidingPanel from "./../components/BidingPanel";
-import "./item.scss";
 import Repository from "./../services/repository";
 import Timer from "./../components/Timer";
-import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+import "./item.scss";
 
 export default function ItemPage() {
 	let { id } = useParams();
 	let [item, setItem] = useState(null);
 	let [bidValue, setBidValue] = useState(0);
 	let [autoBid, setAutoBid] = useState(false);
+	let [isDisabled, setIsDisabled] = useState(false);
 
 	useEffect(() => {
 		Repository.getItemDetails(id).then((item) => {
@@ -58,42 +53,42 @@ export default function ItemPage() {
 			return false;
 		}
 
-		Repository.bid(item.id, bidValue, autoBid);
+		Repository.bid(item.id, bidValue, autoBid).then((response) => setItem(response.item));
 	};
 
 	return (
 		item && (
 			<div className="wrapper">
-				<Timer date={item.close_at} />
 				<div className="item-card">
+					<div className="img">
+						<div style={{ background: `url(${item.image_url})` }} alt={`${item.name} Picture`}></div>
+					</div>
 					<div className="item-details">
-						<div className="img">
-							<img src={item.image_url} style={{ width: "200px" }} />
-						</div>
 						<div className="details">
-							<h4>{item.name}</h4>
-							<p>{item.description}</p>
-							<span>Bid started at {item.starting_price}$</span>
+							<h4 className="name">{item.name}</h4>
+							<p className="description">{item.description}</p>
+							<p className="starting-price">Bid started at {item.starting_price}$</p>
 						</div>
+						<Timer date={item.close_at} />
 						<div className="bid-form">
 							<form onSubmit={preventDefaultFormSubmit}>
 								<FormControl fullWidth variant="outlined" error={!validateBid(bidValue)}>
-									<InputLabel htmlFor="outlined-adornment-amount">Bid Amount</InputLabel>
+									<InputLabel htmlFor="outlined-adornment-amount">Amount</InputLabel>
 									<OutlinedInput value={bidValue} onChange={handleBidChange} startAdornment={<InputAdornment position="start">$</InputAdornment>} labelWidth={60} />
 								</FormControl>
 
-								<FormControlLabel control={<Checkbox checked={autoBid} color="primary" onChange={handleAutoBidChange} name="auto_bid" />} label="Enable Auto-biding?" />
+								<FormControl className="submit-actions">
+									<FormControlLabel control={<Checkbox checked={autoBid} color="primary" onChange={handleAutoBidChange} name="auto_bid" />} label="Enable Auto-biding?" />
 
-								<Button variant="contained" color="primary" size="small" disabled={!item.can_bid || !validateBid(bidValue)} onClick={submitBiding}>
-									Submit Bid
-								</Button>
+									<Button variant="contained" color="primary" size="small" disabled={!item.can_bid || !validateBid(bidValue)} onClick={submitBiding}>
+										Submit Bid
+									</Button>
+								</FormControl>
 							</form>
 						</div>
 					</div>
 				</div>
-				<div className="biding-panel">
-					<BidingPanel />
-				</div>
+				<BidingPanel bids={item.history} />
 			</div>
 		)
 	);

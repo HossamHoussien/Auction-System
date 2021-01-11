@@ -7,7 +7,7 @@ use App\Services\BidService;
 use App\Services\UserService;
 use App\Jobs\ProcessAutoBiding;
 
-class BidingBot
+class BidingObserver
 {
     /**
      * Handle the Bid "saved" event.
@@ -35,7 +35,7 @@ class BidingBot
             
             if($autobidder->id === $bid->user_id) continue;
             
-            ProcessAutoBiding::dispatch($item, $autobidder->id, $bidInfo, true);            
+            ProcessAutoBiding::dispatch($item, $autobidder->id, $bidInfo);            
         }
         
     }

@@ -30,4 +30,15 @@ export default class Repository {
 			});
 		});
 	}
+	static search(keyword) {
+		return new Promise((resolve, reject) => {
+			axios({
+				method: "POST",
+				url: `http://scopic.test/api/search`,
+				data: { keyword },
+			}).then((res) => {
+				resolve(res.data);
+			});
+		});
+	}
 }

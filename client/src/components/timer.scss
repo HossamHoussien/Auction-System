@@ -2,15 +2,15 @@
 	display: flex;
 	justify-content: center;
 	width: 100%;
-	margin-bottom: 1rem;
+	margin-bottom: 2rem;
 	.clock {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		font-weight: bold;
-		background: #1c2f36;
+		background: #fff;
 		padding: 0.5rem;
-		color: #fff;
+		color: #3f51b5;
 		border: 1px solid #fff;
 		width: 80px;
 		height: 80px;
@@ -22,7 +22,7 @@
 			font-size: 0.9rem;
 			margin-top: 0.5rem;
 			text-transform: capitalize;
-			color: #ccc;
+			color: #3e50b2;
 		}
 	}
 }

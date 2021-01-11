@@ -1,13 +1,29 @@
-.MuiDataGrid-root .MuiDataGrid-colCell,
-.MuiDataGrid-root .MuiDataGrid-cell {
-	&:focus {
-		outline: none !important;
+// .MuiDataGrid-root .MuiDataGrid-colCell,
+// .MuiDataGrid-root .MuiDataGrid-cell {
+// 	&:focus {
+// 		outline: none !important;
+// 	}
+// 	.item-image {
+// 		width: 80px;
+// 		height: 80px;
+// 		object-fit: cover;
+// 		border-radius: 50%;
+// 		margin: 0 auto;
+// 	}
+// }
+
+.items-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	padding: 2rem 1rem;
+	.serach-wrapper {
+		width: 90%;
 	}
-	.item-image {
-		width: 80px;
-		height: 80px;
-		object-fit: cover;
-		border-radius: 50%;
-		margin: 0 auto;
+	.MuiPaper-root {
+		margin: 0.5rem;
 	}
+}
+.pagination-wrapper {
+	text-align: center;
 }

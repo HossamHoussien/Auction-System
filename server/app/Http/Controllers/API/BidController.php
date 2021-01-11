@@ -26,8 +26,11 @@ class BidController extends Controller
 
         $status = $this->userService->submitBid($item, $user_id, $data);
 
+        $item->load('history.user');
+
         return response()->json([
             'status' => $status,
+            'item'   => $item
         ]);
 
     }

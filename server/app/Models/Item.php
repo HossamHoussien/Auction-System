@@ -17,4 +17,9 @@ class Item extends Model
     {
         return $this->hasMany(Bid::class);
     }
+
+    public function history()
+    {
+        return $this->hasMany(BidingHistory::class);
+    }
 }

@@ -1,27 +1,29 @@
 import { useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks/index";
-import "./login.css";
+import Auth from "../services/auth";
+import "./login.scss";
 
 export default function LoginPage() {
-	let [email, setEmail] = useState();
-	let [password, setPassword] = useState();
-	let [isLoading, setIsLoading] = useState(false);
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 
-	let auth = useAuth();
-	let history = useHistory();
-	let location = useLocation();
+	const auth = useAuth();
+	const history = useHistory();
+	const location = useLocation();
 
 	const onEmailChange = (e) => setEmail(e.target.value);
 	const onPasswordChange = (e) => setPassword(e.target.value);
 
 	let { from } = location.state || { from: { pathname: "/" } };
 
-	let login = () => {
+	const login = () => {
 		setIsLoading(true);
-		auth.signin(email, password)
-			.then(() => {
+		Auth.signin(email, password)
+			.then((access_token) => {
 				setIsLoading(false);
+				auth.setAccessToken(access_token);
 				history.replace(from);
 			})
 			.catch((e) => {

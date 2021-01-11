@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use App\Models\Bid;
+use App\Models\BidingHistory;
 use App\Models\Item;
 use App\Models\User;
 use App\Repositories\BidRepository;
@@ -14,9 +15,8 @@ class BidService
     protected $repository;
 
     public function __construct() {
-        $this->repository = new BidRepository;;
+        // $this->repository = new BidRepository;;
     }
-
 
     public function getHighestBid(Item $item)
     {

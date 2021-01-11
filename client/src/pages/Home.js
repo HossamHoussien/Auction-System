@@ -1,95 +1,66 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import Pagination from "@material-ui/lab/Pagination";
-import PaginationItem from "@material-ui/lab/PaginationItem";
-import ItemList from "./../components/ItemList";
-import Repository from "../services/repository";
 import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+import Pagination from "@material-ui/lab/Pagination";
+import { Link } from "react-router-dom";
+import { MemoryRouter, Route } from "react-router";
 
-import { DataGrid } from "@material-ui/data-grid";
+import PaginationItem from "@material-ui/lab/PaginationItem";
+
+import Repository from "../services/repository";
+import Card from "./../components/Card";
 import "./home.scss";
+import { useQuery } from "../hooks";
 export default function HomePage() {
-	const [currentPage, setCurrentPage] = useState(1);
-	const [paginator, setPaginator] = useState(null);
 	const [items, setItems] = useState([]);
-	const [filteredItems, setFilteredItems] = useState([]);
-	const columns = [
-		{ field: "id", headerName: "ID" },
-		{
-			field: "image",
-			headerName: "Image",
-			sortable: false,
-			width: 120,
-			renderCell: (params) => <img className="item-image" src={params.row.image_url} />,
-		},
-		{ field: "name", headerName: "Name", sortable: false, width: 300 },
-		{ field: "description", headerName: "Description", sortable: false, width: 300 },
-		{ field: "starting_price", headerName: "Starting Price" },
-		{ field: "close_at", headerName: "Ends At", type: "dateTime" },
-		{
-			field: "actions",
-			width: 150,
-			headerName: "&npsp;",
-			sortable: false,
-			renderCell: (params) => (
-				<strong>
-					<Link to={`/items/${params.row.id}`}>
-						<Button variant="contained" color="primary" size="small">
-							Bid Now
-						</Button>
-					</Link>
-				</strong>
-			),
-		},
-	];
-
-	function CustomPagination(props) {
-		const { pagination, api } = props;
-
-		return <Pagination color="primary" page={pagination.page} count={pagination.pageCount} onChange={(event, value) => api.current.setPage(value)} />;
-	}
+	const [paginator, setPaginator] = useState({});
+	const [currentPage, setCurrentPage] = useState(1);
 
 	const search = (event) => {
 		let keyword = event.target.value.trim().toLowerCase();
-		let regex = new RegExp(keyword, "gi");
-
-		setFilteredItems(items.filter((item) => regex.test(item.name) || regex.test(item.description)));
+		Repository.search(keyword.toLowerCase()).then((paginator) => {
+			setItems(paginator.data);
+			setPaginator(paginator);
+		});
+		// setFilteredItems(items.filter((item) => regex.test(item.name) || regex.test(item.description)));
 	};
-	useEffect(() => {
-		let mounted = true;
-		if (mounted) {
-			Repository.getItems(currentPage).then((paginator) => {
-				setItems(paginator.data);
-				setFilteredItems(paginator.data);
-				setPaginator(paginator);
-			});
-		}
 
-		return () => (mounted = false);
+	useEffect(() => {
+		Repository.getItems(paginator.current_page).then((paginator) => {
+			setItems(paginator.data);
+			// setFilteredItems(paginator.data);
+			setPaginator(paginator);
+		});
 	}, [currentPage]);
 
 	return (
-		paginator && (
-			<div style={{ width: "100%", height: "500px" }}>
-				<TextField id="outlined-basic" label="Search items by name or description" variant="outlined" onChange={search} />
-
-				<DataGrid
-					rows={filteredItems}
-					columns={columns}
-					pageSize={10}
-					rowHeight={100}
-					rowCount={paginator.total}
-					paginationMode="server"
-					pagination
-					disableColumnMenu
-					loading={!items.length}
-					disableSelectionOnClick
-					components={{
-						pagination: CustomPagination,
-					}}
-				/>
+		<div>
+			<div className="items-wrapper">
+				<div className="serach-wrapper">
+					<TextField fullWidth label="Search items by name or description" variant="filled" onChange={search} />
+				</div>
+				{items.map((item) => (
+					<Card item={item} key={item.id} />
+				))}
 			</div>
-		)
+			<div className="pagination-wrapper">
+				<MemoryRouter initialEntries={["/"]} initialIndex={0}>
+					<Route>
+						{({ location }) => {
+							const query = new URLSearchParams(location.search);
+							const page = parseInt(query.get("page") || "1", 10);
+							return (
+								<Pagination
+									page={page}
+									count={paginator.last_page}
+									renderItem={(item) => <PaginationItem component={Link} to={`/${item.page === 1 ? "" : `?page=${item.page}`}`} {...item} />}
+								/>
+							);
+						}}
+					</Route>
+				</MemoryRouter>
+				{/* <Pagination color="primary" page={paginator.current_page} count={paginator.last_page} onChange={(e, page) => setCurrentPage(page)} /> */}
+			</div>
+		</div>
 	);
 }
