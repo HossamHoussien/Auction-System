@@ -21,4 +21,4 @@
 ## IMPORTANT NOTES
 1. To help mitigate the concurrency problem with auto-bidding I have used the `Pessimistic Locking` approach in conjunction with db `transactions` to ensure data consistency and isolation.
 2. Why did I use `Queues`? Well, in order to enable auto-bidding feature I have to run this in the background to be able to control when to dispatch queue jobs and hence not to overload the server.
-3. In order to enable auto-bidding feature you MUST run a start Laravel queue. You can do this by running `php artisan queue:work`
+3. In order to enable auto-bidding feature you MUST start Laravel queue. You can do this by running `php artisan queue:work`
