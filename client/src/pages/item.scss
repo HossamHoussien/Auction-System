@@ -21,11 +21,12 @@
 			display: flex;
 			width: 300px;
 			> div {
-				background-size: contain;
+				background-size: cover;
 				width: 100%;
 				height: 100%;
 				background-repeat: no-repeat;
 				max-height: 300px;
+				background-position: center;
 			}
 		}
 		.item-details {
@@ -41,7 +42,7 @@
 				.description {
 					font-size: 0.95rem;
 					line-height: 1.5rem;
-					text-align: justify;
+					text-align: start;
 				}
 				.starting-price {
 					font-weight: bold;
@@ -99,20 +100,70 @@
 }
 
 @media screen and (max-width: 768px) {
-	.img {
-		height: 300px;
-		width: 100%;
-		justify-content: center;
-		> div {
+	.wrapper {
+		margin: 0;
+
+		.item-card,
+		.biding-panel {
+			width: 100%;
+			margin-top: 2rem;
+			.img {
+				height: 300px;
+				width: 200px;
+				justify-content: center;
+			}
+			.item-details {
+				width: calc(100% - 200px);
+				.details {
+					.starting-price {
+						position: relative;
+						top: 0;
+						right: 0;
+					}
+				}
+			}
 		}
 	}
+}
 
-	.item-details {
-		width: 100%;
+@media screen and (max-width: 768px) {
+	.wrapper {
+		.item-card,
+		.biding-panel {
+			width: 100%;
+			margin-top: 1rem;
+			.img {
+				height: 300px;
+				width: 200px;
+				justify-content: center;
+			}
+			.item-details {
+				width: calc(100% - 200px);
+				.details {
+					.starting-price {
+						position: relative;
+						top: 0;
+						right: 0;
+					}
+				}
+			}
+		}
 	}
+}
 
-	.item-card,
-	.biding-panel {
-		width: 100%;
+@media screen and (max-width: 550px) {
+	.wrapper {
+		.item-card,
+		.biding-panel {
+			.img {
+				height: 200px;
+				width: 100%;
+			}
+			.item-details {
+				width: 100%;
+				.details {
+				}
+			}
+		}
 	}
 }

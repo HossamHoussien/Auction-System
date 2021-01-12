@@ -24,6 +24,7 @@ export default function LoginPage() {
 			.then((response) => {
 				setIsLoading(false);
 				auth.setAccessToken(response.access_token);
+				auth.setIsAuthenticated(true);
 				auth.setMaxAutoBid(response.user.max_bid_amount);
 				history.replace(from);
 			})

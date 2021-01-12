@@ -13,13 +13,10 @@ export const useAuth = () => {
 
 // Init Auth Context Provider
 export function useProvideAuth() {
-	const [access_token, setAccessToken] = useState(null);
-
-	const [maxAutoBid, setMaxAutoBid] = useState(null);
-
 	const token = localStorage.getItem("access_token");
-
-	const isAuthenticated = token ? true : false;
+	const [access_token, setAccessToken] = useState(token);
+	const [isAuthenticated, setIsAuthenticated] = useState(!!token);
+	const [maxAutoBid, setMaxAutoBid] = useState(null);
 
 	configureAxios(token);
 
@@ -33,5 +30,6 @@ export function useProvideAuth() {
 		maxAutoBid,
 		setMaxAutoBid,
 		setAccessToken,
+		setIsAuthenticated,
 	};
 }
