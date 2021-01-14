@@ -9,6 +9,8 @@ class Bid extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     /**
      * The attributes that should be cast to native types.
      *

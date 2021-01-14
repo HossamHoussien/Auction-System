@@ -5,6 +5,7 @@ use App\Models\Item;
 use App\Models\User;
 use App\Services\BidingHistoryService;
 use DB;
+use App\Services\BidService;
 
 class UserService
 {
@@ -46,7 +47,7 @@ class UserService
 
             $user->incrementTotalAutoBids($increment);
 
-            $this->bidingHistoryService->recordHistory($data, $autobiding);
+            $this->bidingHistoryService->recordHistory($data);
 
 
         }, 3);

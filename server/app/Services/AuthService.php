@@ -13,29 +13,13 @@ class AuthService
 
     public static function login(array $credentials)
     {
-    	$passwordClient = self::getPasswordClient();
-
         $user = self::validateCredentials($credentials);
-
-        $http = new HTTPClient;
         try {
-            $response = $http->post(route('passport.token'), [
-                'http_errors' => false, // add this to return errors in json
-                'form_params' => [
-                    'grant_type' => 'password',
-                    'client_id' => $passwordClient->id,
-                    'client_secret' => $passwordClient->secret,
-                    'username' => $credentials['email'],
-                    'password' => $credentials['password'],
-                    'provider' => "users"
-                ],
+            $token = $user->createToken(config('app.name'));
+            return response()->json([
+                'access_token' => $token->accessToken,
+                'user' => $user,
             ]);
-
-            $responseContent = json_decode($response->getBody()->getContents(), true);
-            
-            $responseContent['user'] = $user;
-            
-            return $responseContent;
         } catch (BadResponseException $e) {
             return response()->json("Something went wrong on the server", $e->getCode());
         }
